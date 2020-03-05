@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as actions from "../../store/actions.js";
 
 import CounterControl from "../../components/CounterControl/CounterControl";
 import CounterOutput from "../../components/CounterOutput/CounterOutput";
@@ -19,6 +20,15 @@ class Counter extends Component {
         />
         <CounterControl label="Add 5" clicked={this.props.onAdd} />
         <CounterControl label="Subtract 5" clicked={this.props.onSubtract} />
+        <hr />
+        <button onClick={this.props.onStoreResults}>store results</button>
+        <ul>
+          {this.props.resultArr.map(el => (
+            <li key={el.id} onClick={() => this.props.onDeleteResult(el.id)}>
+              {el.value}
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
@@ -26,16 +36,20 @@ class Counter extends Component {
 
 const mapStateToProps = state => {
   return {
-    cto: state.counter
+    cto: state.counter,
+    resultArr: state.results
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onIncrementCounter: () => dispatch({ type: "INCREMENT" }),
-    onDecrementCounter: () => dispatch({ type: "DECREMENT" }),
-    onAdd: () => dispatch({ type: "ADD", value: 5 }),
-    onSubtract: () => dispatch({ type: "SUBTRACT", value: 5 })
+    onIncrementCounter: () => dispatch({ type: actions.increment }),
+    onDecrementCounter: () => dispatch({ type: actions.decrement }),
+    onAdd: () => dispatch({ type: actions.add, value: 5 }),
+    onSubtract: () => dispatch({ type: actions.subtract, value: 5 }),
+    onStoreResults: () => dispatch({ type: actions.storeResults }),
+    onDeleteResult: id =>
+      dispatch({ type: actions.deleteResults, elementID: id })
   };
 };
 
